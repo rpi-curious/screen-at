@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+## screen-at 'DATE' 'NAME' COMMAND ARGS...
+## screen-at '+1 second' 'one-moment' echo "And it is gone!"
+
+_scheduled="${1:?No date/time supplied!}"
+_screen_name="${2:?No screen name supplied!}"
+
+_future_date="$(date -d "${_scheduled}" +'%s')"
+_now="$(date +'%s')"
+_later="$(( ${_future_date} - ${_now} ))"
+_when="$(date -d "${_scheduled}" +'%Y-%m-%d %T')"
+
+_args=("${@}")
+_cmd=("${_args[@]:2}")
+
+read -r -d '' _screen_commands <<EOF
+sleep "${_later}";
+exec ${_cmd[@]}
+EOF
+
+printf 'Commands...\n%s\n' "${_screen_commands}"
+printf '... Will run at %s\n' "${_when}"
+
+screen -dSm "${_screen_name}" bash -c "${_screen_commands}"
+
+screen -ls
