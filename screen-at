@@ -6,10 +6,15 @@
 _scheduled="${1:?No date/time supplied!}"
 _screen_name="${2:?No screen name supplied!}"
 
-_future_date="$(date -d "${_scheduled}" +'%s')"
-_now="$(date +'%s')"
-_later="$(( ${_future_date} - ${_now} ))"
-_when="$(date -d "${_scheduled}" +'%Y-%m-%d %T')"
+_now="$(date +%s)"  # Get current time sooner rather than later.
+_future_date="$(date -d "${_scheduled}" +%s)"
+if [[ _future_date -lt _now ]] ; then
+  echo WARNING: Scheduling for ${_scheduled} tomorrow.
+  _scheduled="$(date -d tomorrow +%F) $(date -d "${_scheduled}" +%T)"
+  _future_date=$(date -d "${_scheduled}" +%s)
+fi
+_later="$((_future_date - _now))"
+_when="$(date -d "${_scheduled}" +'%F %T')"
 
 _args=("${@}")
 _cmd=("${_args[@]:2}")
