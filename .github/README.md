@@ -154,11 +154,11 @@ git commit -F- <<'EOF'
 EOF
 
 
-git push fork screen-at
+git push fork master
 ```
 
 
-> Note, `git push -u fork screen-at` will set the default upstream remote such that future `git push` commands are automatically directed at the _`fork`_ remote
+> Note, `git push -u fork master` will set the default upstream remote such that future `git push` commands are automatically directed at the _`fork`_ remote
 
 
 - Then on GitHub submit a Pull Request through the Web-UI, the URL syntax is _`https://github.com/<NAME>/<REPO>/pull/new/<BRANCH>`_
