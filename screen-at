@@ -8,11 +8,11 @@ _screen_name="${2:?No screen name supplied!}"
 
 _now="$(date +%s)"  # Get current time sooner rather than later.
 _future_date="$(date -d "${_scheduled}" +%s)"
-if [[ _future_date -lt _now ]] ; then
-  echo WARNING: Scheduling for ${_scheduled} tomorrow.
-  _scheduled="$(date -d tomorrow +%F) $(date -d "${_scheduled}" +%T)"
-  _future_date=$(date -d "${_scheduled}" +%s)
-fi
+[[ _future_date -lt _now ]] && {
+    printf 'WARNING: Scheduling for %s tomorrow.\n' "${_scheduled}"
+    _scheduled="$(date -d tomorrow +%F) $(date -d "${_scheduled}" +%T)"
+    _future_date="$(date -d "${_scheduled}" +%s)"
+}
 _later="$((_future_date - _now))"
 _when="$(date -d "${_scheduled}" +'%F %T')"
 
